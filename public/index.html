@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>My CD Orders</title>
+
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="/javascripts/main.js"></script>
+  <link rel="stylesheet" type="text/css" href="stylesheets/index.css" >
+</head>
+
+<body>
+
+<h2> CD Order Generator</h2>
+ 
+<input type="button" value="Click to show list of orders from server" id="buttonGet"  />
+  
+<div >
+  <h2>Enter a new Order</h2>
+  StoreID <br />
+  <input type="text" value="" id="storeID" /> <br />
+  SalesPersonID <br />
+  <input type="text" value="" id="salesPersonID" /> <br />
+  CdID <br />
+  <input type="text" value="" id="cdID" /> <br />
+  PricePaid <br />
+  <input type="text" value="" id="pricePaid" / ><br />
+  Date <br />
+  <input type="text" value="" id="date" /> <br /> <br />
+ 
+  <input type="button" value="SHOW ONE ORDER" id="buttonCreate" />&nbsp &nbsp 
+  <input type="button" value="SUBMIT ONE ORDER" id="buttonSubmitOne" />&nbsp &nbsp 
+  <input type="button" value="SUBMIT 500 ORDERS" id="buttonSubmit500" />
+
+</div>
+<br />
+<br />
+<br />
+
+<h2>My CD Order List</h2>
+<div id="textString"> &nbsp &nbsp  &nbsp &nbsp 
+  StoreID: &nbsp &nbsp  &nbsp &nbsp 
+  SalesPersonID: &nbsp &nbsp  &nbsp &nbsp  
+  CdID: &nbsp  &nbsp &nbsp  &nbsp 
+  PricePaid:  &nbsp  &nbsp &nbsp  &nbsp 
+  Date: </div>
+<div id="divCDList"></div>
+<br />
+
+
+ 
+</body>
+
+</html>
