@@ -1,28 +1,26 @@
 var express = require('express');
+const { route } = require('express/lib/application');
 var router = express.Router();
-var fs = require("fs");
+const mongoose = require("mongoose");
+const CDSchema = require("../CDSchema");
+const dbURI = "mongodb+srv://chiaweil:87W59ga0zleImcRf@jerry.udbr5.mongodb.net/CdDatabase?retryWrites=true&w=majority";
+mongoose.set('useFindAndModify', false);
 
-let ServerOrderArray = [];
-// my file management code, embedded in an object
-fileManager  = {
+// connect to mongoDB
+const options = {
+  reconnectTries: Number.MAX_VALUE,
+  poolSize: 10
+};
 
-  read: function() {
-    const stat = fs.statSync('OrdersFile.json');
-    if (stat.size !== 0) {                           
-    var rawdata = fs.readFileSync('OrdersFile.json'); // read disk file
-    ServerOrderArray = JSON.parse(rawdata);  // turn the file data into JSON format and overwrite our array
-    }
-    else {
-    console.log("empty file");
-    }
-  },
-  
-  write: function() {
-    let data = JSON.stringify(ServerOrderArray);    // take our object data and make it writeable
-    fs.writeFileSync('OrdersFile.json', data);  // write it
-  },
+mongoose.connect(dbURI, options).then(
+  () => {
+    console.log("Database connection established!");
+  }
+,err => {
+  console.log("Error connecting Database instance due to: ", err);
 }
-
+);
+// ==============================================================
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -42,20 +40,21 @@ router.post('/ShowOneOrder', function(req, res) {
   res.end(JSON.stringify(response)); // send reply
 });
 
-
-/* Add one new Order to file */
-router.post('/StoreOneOrder', function(req, res) {
-  const newOrder = req.body;  // get the object from the req object sent from browser
-  ServerOrderArray.push(newOrder);  // add it to our "DB"  (array)
-  fileManager.write();
-  // prepare a reply to the browser
-  var response = {
-    status  : 200,
-    success : 'Added Order Successfully'
-  }
-  res.end(JSON.stringify(response)); // send reply
+// Add one CD
+router.post('/AddCD', function(req, res){
+  let oneNewCD = new CDSchema(req.body);
+  console.log(req.body);
+  oneNewCD.save((err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    var response = {
+      status: 200,
+      success: "Added Successfully"
+    };
+    res.end(JSON.stringify(response));
+  });
 });
-
 
 /* query one */
 router.get('/queryone', function(req, res) {
@@ -74,40 +73,25 @@ router.get('/querytwo', function(req, res) {
 
 /* GET all CD data */
 router.get('/getAllCDs', function(req, res) {
-  fileManager.read();
-  res.status(200).json(ServerOrderArray);
-});
-
-
-// delete CD
-router.delete('/DeleteCD/:CdID', (req, res) => {
-  const CdID = req.params.CdID;
-  let found = false;
-  console.log(CdID);    
-
-  for(var i = 0; i < ServerOrderArray.length; i++) // find the match
-  {
-      if(ServerOrderArray[i].CdID === CdID){
-        ServerOrderArray.splice(i,1);  // remove object from array
-          found = true;
-          fileManager.write();
-          break;
-      }
-  }
-
-  if (!found) {
-    console.log("not found");
-    return res.status(500).json({
-      status: "error"
-    });
-  } else {
-    var response = {
-      status  : 200,
-      success : 'CD ' + CdID + ' deleted!'
+  CDSchema.find({}, (err, AllCDs) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
     }
-    res.end(JSON.stringify(response)); // send reply
-  }
-});
+    res.status(200).json(AllCDs);
+  });
 
+});
+// // delete CD
+// router.route("/Delete:CDId").delete(function(req, res) {
+//   const pCdID = req.params.CdID;
+//   CDSchema.remove({CdID: pCdID}, function(err, result) {
+//     if (err){
+//       console.log(err);
+//     }else{
+//       console.log("Result :", result);
+//     }
+//   })
+// });
 
 module.exports = router;
