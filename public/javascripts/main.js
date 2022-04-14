@@ -25,6 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
         createList();      
     });
 
+    document.getElementById("buttonQueryOne").addEventListener("click", function () {
+        QueryOne();      
+    });
+
+    document.getElementById("buttonQueryTwo").addEventListener("click", function () {
+        QueryTwo();      
+    });
+
     document.getElementById("buttonCreate").addEventListener("click", function () {
         CreateOneOrder();
     });
@@ -36,8 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("buttonSubmit500").addEventListener("click", function () {
         for (let i = 0; i < 500; i++) {
             WriteOneOrder();
-        }
-
+        }; 
     });
     
 });  
@@ -125,7 +132,24 @@ function createList() {
     .then(response => response.json())  // get the data out of the response object
     .then( responseData => fillUL(responseData))    //update our array and li's
     .catch(err => console.log('Request Failed', err)); // Catch errors
+};
 
+function QueryOne() {
+    // update local array from server
+        fetch('/queryone')
+        // Handle success
+        .then(response => response.json())  // get the data out of the response object
+        .then( responseData => fillUL(responseData))    //update our array and li's
+        .catch(err => console.log('Request Failed', err)); // Catch errors
+};
+
+function QueryTwo() {
+    // update local array from server
+        fetch('/querytwo')
+        // Handle success
+        .then(response => response.json())  // get the data out of the response object
+        .then( responseData => fillUL(responseData))    //update our array and li's
+        .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
 function fillUL(data) {

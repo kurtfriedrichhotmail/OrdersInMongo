@@ -57,6 +57,21 @@ router.post('/StoreOneOrder', function(req, res) {
 });
 
 
+/* query one */
+router.get('/queryone', function(req, res) {
+  console.log("doing query one");
+  fileManager.read();
+  res.status(200).json(ServerOrderArray);
+});
+
+/* query two */
+router.get('/querytwo', function(req, res) {
+  console.log("doing query two");
+  fileManager.read();
+  res.status(200).json(ServerOrderArray);
+});
+
+
 /* GET all CD data */
 router.get('/getAllCDs', function(req, res) {
   fileManager.read();
