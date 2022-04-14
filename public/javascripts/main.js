@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     timeElapsed = Date.now();
 
 //  button events ************************************************************************
-
+    // show all from db
     document.getElementById("buttonGet").addEventListener("click", function () {
         createList();      
     });
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("buttonSubmitOne").addEventListener("click", function () {
-        PostOneOrder();
+        WriteOneOrder();
     });
 
     document.getElementById("buttonSubmit500").addEventListener("click", function () {
@@ -80,50 +80,50 @@ function CreateOneOrder(){
     document.getElementById("date").value =  randomTimeValue;
 };
 
-function PostOneOrder(){
-    CreateOneOrder();  // create and store in the HTML
-    // use the HTML values with the constructore to make a new Order object
-    let newOrder = new orderObject(
-    document.getElementById("storeID").value, 
-    document.getElementById("salesPersonID").value, 
-    document.getElementById("cdID").value, 
-    document.getElementById("pricePaid").value,
-    document.getElementById("date").value);
+// function PostOneOrder(){
+//     CreateOneOrder();  // create and store in the HTML
+//     // use the HTML values with the constructore to make a new Order object
+//     let newOrder = new orderObject(
+//     document.getElementById("storeID").value, 
+//     document.getElementById("salesPersonID").value, 
+//     document.getElementById("cdID").value, 
+//     document.getElementById("pricePaid").value,
+//     document.getElementById("date").value);
 
-    // Post it to the server in a method that just logs, does not save
-    fetch('/ShowOneOrder', {
-        method: "POST",
-        body: JSON.stringify(newOrder),
-        headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(response => response.json()) 
-        .then(json => console.log(json))
-        .catch(err => console.log(err));
+//     // Post it to the server in a method that just logs, does not save
+//     fetch('/ShowOneOrder', {
+//         method: "POST",
+//         body: JSON.stringify(newOrder),
+//         headers: {"Content-type": "application/json; charset=UTF-8"}
+//         })
+//         .then(response => response.json()) 
+//         .then(json => console.log(json))
+//         .catch(err => console.log(err));
 
-};
+// };
 
 
-function WriteOneOrder(){
-    CreateOneOrder();   // create and store in the HTML
-    // use the HTML values with the constructore to make a new Order object
-    let newOrder = new orderObject(
-    document.getElementById("storeID").value, 
-    document.getElementById("salesPersonID").value, 
-    document.getElementById("cdID").value, 
-    document.getElementById("pricePaid").value,
-    document.getElementById("date").value);
+// function WriteOneOrder(){
+//     CreateOneOrder();   // create and store in the HTML
+//     // use the HTML values with the constructore to make a new Order object
+//     let newOrder = new orderObject(
+//     document.getElementById("storeID").value, 
+//     document.getElementById("salesPersonID").value, 
+//     document.getElementById("cdID").value, 
+//     document.getElementById("pricePaid").value,
+//     document.getElementById("date").value);
 
-    // Post it to the server in a method that adds it to the json file
-    fetch('/StoreOneOrder', {
-        method: "POST",
-        body: JSON.stringify(newOrder),
-        headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(response => response.json()) 
-        .then(json => console.log(json))
-        .catch(err => console.log(err));
+//     // Post it to the server in a method that adds it to the json file
+//     fetch('/StoreOneOrder', {
+//         method: "POST",
+//         body: JSON.stringify(newOrder),
+//         headers: {"Content-type": "application/json; charset=UTF-8"}
+//         })
+//         .then(response => response.json()) 
+//         .then(json => console.log(json))
+//         .catch(err => console.log(err));
 
-};
+// };
 
 function createList() {
 // update local array from server
@@ -152,6 +152,29 @@ function QueryTwo() {
         .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
+// Add one CD into MongoDB
+function WriteOneOrder() {
+    CreateOneOrder();   // create and store in the HTML
+    // use the HTML values with the constructore to make a new Order object
+    let newOrder = new orderObject(
+    document.getElementById("storeID").value, 
+    document.getElementById("salesPersonID").value, 
+    document.getElementById("cdID").value, 
+    document.getElementById("pricePaid").value,
+    document.getElementById("date").value);
+
+    // Post it to the server in a method that adds it to the json file
+    fetch('/AddCD', {
+        method: "POST",
+        body: JSON.stringify(newOrder),
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(response => response.json()) 
+        .then(json => console.log(json))
+        .catch(err => console.log(err));
+
+}
+
 function fillUL(data) {
         // clear prior data
     var divCDList = document.getElementById("divCDList");
@@ -163,10 +186,10 @@ function fillUL(data) {
     CDArray = data;
     CDArray.forEach(function (element,) {   // use handy array forEach method
         var li = document.createElement('li');
-        li.innerHTML = element.StoreID + ":  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp " + 
-        element.SalesPersonID + "  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp "  + 
-        element.CdID + " &nbsp &nbsp &nbsp &nbsp &nbsp  " + 
-        element.PricePaid + "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  " + 
+        li.innerHTML = element.StoreID + ":&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + 
+        element.SalesPersonID + "  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp"  + 
+        element.CdID + " &nbsp &nbsp &nbsp &nbsp &nbsp" + 
+        element.PricePaid + "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + 
         element.Date;
         ul.appendChild(li);
     });
