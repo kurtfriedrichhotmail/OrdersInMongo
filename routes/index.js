@@ -57,10 +57,25 @@ router.post('/AddCD', function(req, res){
 });
 
 /* query one */
-router.get('/queryone', function(req, res) {
-  console.log("doing query one");
-  fileManager.read();
-  res.status(200).json(ServerOrderArray);
+// router.get('/queryone', function(req, res) {
+//   CDSchema.find({}).sort({CdID: 1}).exec(function(err, AllCDs) {
+//     if (err) {
+//       console.log(err);
+//       res.status(500).send(err);
+//     }
+//     res.status(200).json(AllCDs);
+//   })
+// });
+router.get('/queryone/:selectedCDId', function(req, res) {
+  let selectedCDId = req.params.selectedCDId;
+  
+  CDSchema.find({CdID: selectedCDId}, (err, AllCDs) => {
+  if (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+  res.status(200).json(AllCDs);
+  })
 });
 
 /* query two */
@@ -80,18 +95,7 @@ router.get('/getAllCDs', function(req, res) {
     }
     res.status(200).json(AllCDs);
   });
-
 });
-// // delete CD
-// router.route("/Delete:CDId").delete(function(req, res) {
-//   const pCdID = req.params.CdID;
-//   CDSchema.remove({CdID: pCdID}, function(err, result) {
-//     if (err){
-//       console.log(err);
-//     }else{
-//       console.log("Result :", result);
-//     }
-//   })
-// });
+
 
 module.exports = router;

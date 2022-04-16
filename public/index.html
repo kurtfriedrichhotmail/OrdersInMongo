@@ -16,8 +16,20 @@
  
 <input type="button" value="Click to show list of orders from server" id="buttonGet"  /> <br />
 
-<input type="button" value="Click to show query one" id="buttonQueryOne"  /> <br />
-
+<input type="button" value="Click to show query one" id="buttonQueryOne"  />
+<select name="CdIDDropdownList" id="CdIDDropdownList">
+  <option value="123456">123456</option>
+  <option value="123654">123654</option>
+  <option value="321456">321456</option>
+  <option value="321654">321654</option>
+  <option value="654123">654123</option>
+  <option value="654321">654321</option>
+  <option value="543216">543216</option>
+  <option value="354126">354126</option>
+  <option value="621453">621453</option>
+  <option value="623451">623451</option>
+</select>
+<br />
 <input type="button" value="Click to show query two" id="buttonQueryTwo"  /> <br />
 
 <div >
@@ -42,7 +54,11 @@
 <br />
 <br />
 
-<h2>My CD Order List</h2>
+<div class="container">
+  <h2>My CD Order List</h2>
+  <div id="divCDCount"></div>
+</div>
+
 <div id="textString"> &nbsp &nbsp  &nbsp &nbsp 
   StoreID: &nbsp &nbsp  &nbsp &nbsp 
   SalesPersonID: &nbsp &nbsp  &nbsp &nbsp  

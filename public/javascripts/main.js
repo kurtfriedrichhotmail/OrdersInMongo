@@ -23,10 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // show all from db
     document.getElementById("buttonGet").addEventListener("click", function () {
         createList();      
+        let divCDCount = document.getElementById("divCDCount");
+        divCDCount.style.display = "block";
     });
 
     document.getElementById("buttonQueryOne").addEventListener("click", function () {
         QueryOne();      
+        let divCDCount = document.getElementById("divCDCount");
+        divCDCount.style.display = "block";
     });
 
     document.getElementById("buttonQueryTwo").addEventListener("click", function () {
@@ -136,7 +140,10 @@ function createList() {
 
 function QueryOne() {
     // update local array from server
-        fetch('/queryone')
+        let CdIDDropdownList = document.getElementById("CdIDDropdownList");
+        let selectedValue = CdIDDropdownList.options[CdIDDropdownList.selectedIndex].text;
+        
+        fetch(`/queryone/${selectedValue}`)
         // Handle success
         .then(response => response.json())  // get the data out of the response object
         .then( responseData => fillUL(responseData))    //update our array and li's
@@ -184,6 +191,7 @@ function fillUL(data) {
 
     var ul = document.createElement('ul');
     CDArray = data;
+    let count = CDArray.length;
     CDArray.forEach(function (element,) {   // use handy array forEach method
         var li = document.createElement('li');
         li.innerHTML = element.StoreID + ":&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + 
@@ -193,5 +201,7 @@ function fillUL(data) {
         element.Date;
         ul.appendChild(li);
     });
+    var divCDCount = document.getElementById("divCDCount");
+    divCDCount.innerHTML = `Count: ${count}`;
     divCDList.appendChild(ul)
 };
