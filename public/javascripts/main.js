@@ -152,10 +152,10 @@ function QueryOne() {
 
 function QueryTwo() {
     // update local array from server
-        fetch('/querytwo')
+        fetch('/getStoreRanking')
         // Handle success
         .then(response => response.json())  // get the data out of the response object
-        .then( responseData => fillUL(responseData))    //update our array and li's
+        .then( responseData => fillULtwo(responseData))    //update our array and li's
         .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
@@ -204,4 +204,30 @@ function fillUL(data) {
     var divCDCount = document.getElementById("divCDCount");
     divCDCount.innerHTML = `Count: ${count}`;
     divCDList.appendChild(ul)
+};
+
+
+function fillULtwo(data) {
+    // clear prior data
+var divCDList = document.getElementById("divCDList");
+while (divCDList.firstChild) {    // remove any old data so don't get duplicates
+    divCDList.removeChild(divCDList.firstChild);
+};
+
+var ul = document.createElement('ul');
+
+var li = document.createElement('li');
+li.innerHTML = "Store ID" + ":&nbsp &nbsp &nbsp " + "Number of 'Piece By Piece' CDs sold" ;
+ul.appendChild(li);
+
+let CDsubsetArray = data;
+let count = CDsubsetArray.length;
+CDsubsetArray.forEach(function (element,) {   // use handy array forEach method
+    var li = document.createElement('li');
+    li.innerHTML = element._id + ":&nbsp &nbsp &nbsp " + element.count ;
+    ul.appendChild(li);
+});
+var divCDCount = document.getElementById("divCDCount");
+divCDCount.innerHTML = "";
+divCDList.appendChild(ul)
 };

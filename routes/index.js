@@ -4,6 +4,9 @@ var router = express.Router();
 const mongoose = require("mongoose");
 const CDSchema = require("../CDSchema");
 const dbURI = "mongodb+srv://chiaweil:87W59ga0zleImcRf@jerry.udbr5.mongodb.net/CdDatabase?retryWrites=true&w=majority";
+
+//const dbURI = "mongodb+srv://bcuser:bcuser@cluster0.nbt1n.mongodb.net/CdDatabase?retryWrites=true&w=majority";
+
 mongoose.set('useFindAndModify', false);
 
 // connect to mongoDB
@@ -56,16 +59,6 @@ router.post('/AddCD', function(req, res){
   });
 });
 
-/* query one */
-// router.get('/queryone', function(req, res) {
-//   CDSchema.find({}).sort({CdID: 1}).exec(function(err, AllCDs) {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).send(err);
-//     }
-//     res.status(200).json(AllCDs);
-//   })
-// });
 router.get('/queryone/:selectedCDId', function(req, res) {
   let selectedCDId = req.params.selectedCDId;
   
@@ -78,12 +71,33 @@ router.get('/queryone/:selectedCDId', function(req, res) {
   })
 });
 
-/* query two */
-router.get('/querytwo', function(req, res) {
-  console.log("doing query two");
-  fileManager.read();
-  res.status(200).json(ServerOrderArray);
-});
+  /* GET ranking of stores which sold song 621453   Piece By Piece */
+  router.get('/getStoreRanking', function(req, res) {
+
+    CDSchema.aggregate([
+
+      { $match : { CdID : "621453" } },
+
+      {$group: {_id: "$StoreID", count:{ $sum: 1}}}
+    ])
+
+    .sort('-count')
+
+    .exec(function (err, storeRanking) {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    console.log(storeRanking);
+    res.status(200).json(storeRanking);
+    });
+  });
+
+
+
+
+
+
 
 
 /* GET all CD data */
