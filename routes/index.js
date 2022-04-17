@@ -3,9 +3,9 @@ const { route } = require('express/lib/application');
 var router = express.Router();
 const mongoose = require("mongoose");
 const CDSchema = require("../CDSchema");
-const dbURI = "mongodb+srv://chiaweil:87W59ga0zleImcRf@jerry.udbr5.mongodb.net/CdDatabase?retryWrites=true&w=majority";
+//const dbURI = "mongodb+srv://chiaweil:87W59ga0zleImcRf@jerry.udbr5.mongodb.net/CdDatabase?retryWrites=true&w=majority";
 
-//const dbURI = "mongodb+srv://bcuser:bcuser@cluster0.nbt1n.mongodb.net/CdDatabase?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://bcuser:bcuser@cluster0.nbt1n.mongodb.net/CdDatabase?retryWrites=true&w=majority";
 
 mongoose.set('useFindAndModify', false);
 
@@ -130,6 +130,33 @@ router.get('/getAllCDs', function(req, res) {
     res.status(200).json(AllCDs);
   });
 });
+
+
+
+  // route get total cash sales per salesperson
+
+  router.get('/getSalesPersonAggregate', function(req, res) {
+    // find {  takes values, but leaving it blank gets all}
+   // new date generated on date of query
+    var currentDate = new Date();
+  
+    CDSchema.aggregate([
+    { $group : { _id: {StoreID : '$StoreID', SalesPersonID : '$SalesPersonID',}, TotalSales: {$sum: "$PricePaid"}}},
+    { $project : {StoreID : '$_id.StoreID', SalesPersonID: '$_id.SalesPersonID', PricePaid: '$TotalSales', _id:0}},
+    { $sort : {PricePaid : -1}},
+    { $set : {Date: currentDate}}
+  
+  ])
+  .exec (function (err, salesPerson) {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    console.log(salesPerson);
+    res.status(200).json(salesPerson);
+  });
+  
+  });
 
 
 module.exports = router;

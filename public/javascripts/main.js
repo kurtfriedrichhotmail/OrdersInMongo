@@ -3,16 +3,6 @@ let CDArray = [];
 const storeIDArray = ['98053', '98007', '98077', '98055', '98011', '98046'];
 const cdIdArray = ['123456', '123654', '321456', '321654', '654123', '654321', '543216', '354126', '621453', '623451'];
 
-
-// define a constructor to create CD Orders
-let orderObject = function (pStoreID, pSalesPersonID, pCdID, pPricePaid, pDate) {
-    this.StoreID = pStoreID
-    this.SalesPersonID = pSalesPersonID;
-    this.CdID = pCdID;
-    this.PricePaid = pPricePaid;  // action  comedy  drama  horrow scifi  musical  western
-    this.Date = pDate;
-}
-
 let timeElapsed;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -50,6 +40,10 @@ document.addEventListener("DOMContentLoaded", function () {
             WriteOneOrder();
         }; 
     });
+
+    document.getElementById("buttonSalesPersonTotalCashSales").addEventListener("click", function() {
+        createListOfSalesTotalPerSalesPerson();
+    });
     
 });  
 // end of wait until document has loaded event  *************************************************************************
@@ -64,6 +58,50 @@ function GetTimeString(){
 //  until April 18th ar 3:11
 //     2022-04-18T 03:11:29
 //     2022-04-11T 21:33:41
+
+function createListOfSalesTotalPerSalesPerson(){
+    fetch('/getSalesPersonAggregate')
+    .then(response => response.json())  // get the data out of the response object
+    .then( responseData => fillTotalCashSalesUL(responseData))    //update our array and li's
+    .catch(err => console.log('Request Failed', err)); // Catch errors
+};
+
+// total cash sales populate div
+function fillTotalCashSalesUL(data) {
+     // Div container displaying queries
+    var queryDisplay = document.getElementById("QueryDisplay");
+    queryDisplay.style.visibility = "visible";
+     
+     queryDisplay.innerHTML = 
+      "<h2>Total Cash Sales Made by Each Sales Person (Sorted by High to Low)</h2>" + 
+      "<div id=\"textString\"> StoreID: &nbsp &nbsp  &nbsp &nbsp " + 
+      "SalesPersonID: &nbsp &nbsp  &nbsp &nbsp " +
+      "Total Cash Sales($): &nbsp  &nbsp &nbsp  &nbsp" + 
+      " As of (Date Today):   </div>" + 
+      "<div id=\"divTotalCashSales\"></div>";
+    
+     orderArray = data;
+    // clear prior data
+     var divTotalCashSales = document.getElementById("divTotalCashSales");
+     while (divTotalCashSales.firstChild) {    // remove any old data so don't get duplicates
+        divTotalCashSales.removeChild(divTotalCashSales.firstChild);
+     };
+ 
+     var ul = document.createElement('ul');
+    
+     orderArray.forEach(function (element,) {   // use handy array forEach method
+         var li = document.createElement('li');
+         li.innerHTML = 
+             element.StoreID + "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" +
+             element.SalesPersonID + " &nbsp &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp " +
+             element.PricePaid + " &nbsp &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + 
+             element.Date;
+         ul.appendChild(li);
+     });
+     divTotalCashSales.appendChild(ul)
+     
+ };
+
 
 // Generates valid Order values and writes them to the HTML elements
 function CreateOneOrder(){
@@ -84,51 +122,6 @@ function CreateOneOrder(){
     document.getElementById("date").value =  randomTimeValue;
 };
 
-// function PostOneOrder(){
-//     CreateOneOrder();  // create and store in the HTML
-//     // use the HTML values with the constructore to make a new Order object
-//     let newOrder = new orderObject(
-//     document.getElementById("storeID").value, 
-//     document.getElementById("salesPersonID").value, 
-//     document.getElementById("cdID").value, 
-//     document.getElementById("pricePaid").value,
-//     document.getElementById("date").value);
-
-//     // Post it to the server in a method that just logs, does not save
-//     fetch('/ShowOneOrder', {
-//         method: "POST",
-//         body: JSON.stringify(newOrder),
-//         headers: {"Content-type": "application/json; charset=UTF-8"}
-//         })
-//         .then(response => response.json()) 
-//         .then(json => console.log(json))
-//         .catch(err => console.log(err));
-
-// };
-
-
-// function WriteOneOrder(){
-//     CreateOneOrder();   // create and store in the HTML
-//     // use the HTML values with the constructore to make a new Order object
-//     let newOrder = new orderObject(
-//     document.getElementById("storeID").value, 
-//     document.getElementById("salesPersonID").value, 
-//     document.getElementById("cdID").value, 
-//     document.getElementById("pricePaid").value,
-//     document.getElementById("date").value);
-
-//     // Post it to the server in a method that adds it to the json file
-//     fetch('/StoreOneOrder', {
-//         method: "POST",
-//         body: JSON.stringify(newOrder),
-//         headers: {"Content-type": "application/json; charset=UTF-8"}
-//         })
-//         .then(response => response.json()) 
-//         .then(json => console.log(json))
-//         .catch(err => console.log(err));
-
-// };
-
 function createList() {
 // update local array from server
     fetch('/getAllCDs')
@@ -138,30 +131,15 @@ function createList() {
     .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
-// function QueryOne() {
-//     // update local array from server
-//         let CdIDDropdownList = document.getElementById("CdIDDropdownList");
-//         let selectedValue = CdIDDropdownList.options[CdIDDropdownList.selectedIndex].text;
-        
-//         fetch(`/queryone/${selectedValue}`)
-//         // Handle success
-//         .then(response => response.json())  // get the data out of the response object
-//         .then( responseData => fillUL(responseData))    //update our array and li's
-//         .catch(err => console.log('Request Failed', err)); // Catch errors
-// };
 function QueryOne() {
-    // update local array from server
         fetch(`/queryone`)
-        // Handle success
         .then(response => response.json())  // get the data out of the response object
         .then( responseData => fillULOne(responseData))    //update our array and li's
         .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
 function QueryTwo() {
-    // update local array from server
         fetch('/getStoreRanking')
-        // Handle success
         .then(response => response.json())  // get the data out of the response object
         .then( responseData => fillULtwo(responseData))    //update our array and li's
         .catch(err => console.log('Request Failed', err)); // Catch errors
@@ -245,13 +223,13 @@ function fillULOne(data) {
     while (divCDList.firstChild) {    // remove any old data so don't get duplicates
         divCDList.removeChild(divCDList.firstChild);
     };
-
     var ul = document.createElement('ul');
 
     var li = document.createElement('li');
     li.innerHTML = "CdID" + ":&nbsp &nbsp &nbsp " + "Number of CDs sold" ;
     ul.appendChild(li);
     CDArray = data;
+    console.log(data);
     CDArray.forEach(function (element,) {   // use handy array forEach method
         var li = document.createElement('li');
         li.innerHTML = element._id + ":&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + element.count;

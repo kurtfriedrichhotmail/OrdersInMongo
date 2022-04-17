@@ -15,7 +15,7 @@ const CDSchema = new Schema({
         required: true
     },
     PricePaid: {
-        type: String,
+        type: Number,
         required: true
     },
     Date: {
