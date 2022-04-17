@@ -68,6 +68,7 @@ function createListOfSalesTotalPerSalesPerson(){
 
 // total cash sales populate div
 function fillTotalCashSalesUL(data) {
+    console.log(data);
      // Div container displaying queries
     var queryDisplay = document.getElementById("QueryDisplay");
     queryDisplay.style.visibility = "visible";

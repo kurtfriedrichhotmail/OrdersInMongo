@@ -59,17 +59,6 @@ router.post('/AddCD', function(req, res){
   });
 });
 
-// router.get('/queryone/:selectedCDId', function(req, res) {
-//   let selectedCDId = req.params.selectedCDId;
-  
-//   CDSchema.find({CdID: selectedCDId}, (err, AllCDs) => {
-//   if (err) {
-//     console.log(err);
-//     res.status(500).send(err);
-//   }
-//   res.status(200).json(AllCDs);
-//   })
-// });
 
 router.get('/queryone', function(req, res) {
   CDSchema.aggregate([
@@ -134,6 +123,8 @@ router.get('/getAllCDs', function(req, res) {
 
 
   // route get total cash sales per salesperson
+  // $project === Passes along the documents with the requested fields to the next stage in the pipeline.
+  // The specified fields can be existing fields from the input documents or newly computed fields.
 
   router.get('/getSalesPersonAggregate', function(req, res) {
     // find {  takes values, but leaving it blank gets all}
@@ -142,7 +133,7 @@ router.get('/getAllCDs', function(req, res) {
   
     CDSchema.aggregate([
     { $group : { _id: {StoreID : '$StoreID', SalesPersonID : '$SalesPersonID',}, TotalSales: {$sum: "$PricePaid"}}},
-    { $project : {StoreID : '$_id.StoreID', SalesPersonID: '$_id.SalesPersonID', PricePaid: '$TotalSales', _id:0}},
+    { $project : {StoreID : '$_id.StoreID', SalesPersonID: '$_id.SalesPersonID', PricePaid: '$TotalSales', _id:0}},  // _id:0  Specifies the suppression of the _id field.
     { $sort : {PricePaid : -1}},
     { $set : {Date: currentDate}}
   
