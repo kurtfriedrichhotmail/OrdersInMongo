@@ -138,15 +138,23 @@ function createList() {
     .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
+// function QueryOne() {
+//     // update local array from server
+//         let CdIDDropdownList = document.getElementById("CdIDDropdownList");
+//         let selectedValue = CdIDDropdownList.options[CdIDDropdownList.selectedIndex].text;
+        
+//         fetch(`/queryone/${selectedValue}`)
+//         // Handle success
+//         .then(response => response.json())  // get the data out of the response object
+//         .then( responseData => fillUL(responseData))    //update our array and li's
+//         .catch(err => console.log('Request Failed', err)); // Catch errors
+// };
 function QueryOne() {
     // update local array from server
-        let CdIDDropdownList = document.getElementById("CdIDDropdownList");
-        let selectedValue = CdIDDropdownList.options[CdIDDropdownList.selectedIndex].text;
-        
-        fetch(`/queryone/${selectedValue}`)
+        fetch(`/queryone`)
         // Handle success
         .then(response => response.json())  // get the data out of the response object
-        .then( responseData => fillUL(responseData))    //update our array and li's
+        .then( responseData => fillULOne(responseData))    //update our array and li's
         .catch(err => console.log('Request Failed', err)); // Catch errors
 };
 
@@ -191,7 +199,7 @@ function fillUL(data) {
 
     var ul = document.createElement('ul');
     CDArray = data;
-    let count = CDArray.length;
+    // let count = CDArray.length;
     CDArray.forEach(function (element,) {   // use handy array forEach method
         var li = document.createElement('li');
         li.innerHTML = element.StoreID + ":&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + 
@@ -202,7 +210,7 @@ function fillUL(data) {
         ul.appendChild(li);
     });
     var divCDCount = document.getElementById("divCDCount");
-    divCDCount.innerHTML = `Count: ${count}`;
+    // divCDCount.innerHTML = `Count: ${count}`;
     divCDList.appendChild(ul)
 };
 
@@ -230,4 +238,26 @@ CDsubsetArray.forEach(function (element,) {   // use handy array forEach method
 var divCDCount = document.getElementById("divCDCount");
 divCDCount.innerHTML = "";
 divCDList.appendChild(ul)
+};
+
+function fillULOne(data) {
+        // clear prior data
+    while (divCDList.firstChild) {    // remove any old data so don't get duplicates
+        divCDList.removeChild(divCDList.firstChild);
+    };
+
+    var ul = document.createElement('ul');
+
+    var li = document.createElement('li');
+    li.innerHTML = "CdID" + ":&nbsp &nbsp &nbsp " + "Number of CDs sold" ;
+    ul.appendChild(li);
+    CDArray = data;
+    CDArray.forEach(function (element,) {   // use handy array forEach method
+        var li = document.createElement('li');
+        li.innerHTML = element._id + ":&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp" + element.count;
+        ul.appendChild(li);
+    });
+    var divCDCount = document.getElementById("divCDCount");
+    divCDCount.innerHTML = "";
+    divCDList.appendChild(ul)
 };

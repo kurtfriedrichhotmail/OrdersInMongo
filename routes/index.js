@@ -59,15 +59,35 @@ router.post('/AddCD', function(req, res){
   });
 });
 
-router.get('/queryone/:selectedCDId', function(req, res) {
-  let selectedCDId = req.params.selectedCDId;
+// router.get('/queryone/:selectedCDId', function(req, res) {
+//   let selectedCDId = req.params.selectedCDId;
   
-  CDSchema.find({CdID: selectedCDId}, (err, AllCDs) => {
-  if (err) {
-    console.log(err);
-    res.status(500).send(err);
-  }
-  res.status(200).json(AllCDs);
+//   CDSchema.find({CdID: selectedCDId}, (err, AllCDs) => {
+//   if (err) {
+//     console.log(err);
+//     res.status(500).send(err);
+//   }
+//   res.status(200).json(AllCDs);
+//   })
+// });
+
+router.get('/queryone', function(req, res) {
+  CDSchema.aggregate([
+    {
+      $group: {
+        _id: '$CdID',
+        count: {$sum: 1}
+      }
+    }
+  ])
+  .sort('-count')
+  .exec(function (err, CD) {
+    if (err) {
+      console.log(err)
+      res.status(500).send(err)
+    }
+    console.log(CD)
+    res.status(200).json(CD)
   })
 });
 
