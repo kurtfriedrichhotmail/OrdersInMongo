@@ -60,6 +60,20 @@ router.post('/AddCD', function(req, res){
 });
 
 
+/* GET all CD data */
+router.get('/getAllCDs', function(req, res) {
+  CDSchema.find({}, (err, AllCDs) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    res.status(200).json(AllCDs);
+  });
+});
+
+// new queries ========================================================
+
+
 router.get('/queryone', function(req, res) {
   CDSchema.aggregate([
     {
@@ -104,21 +118,6 @@ router.get('/queryone', function(req, res) {
 
 
 
-
-
-
-
-
-/* GET all CD data */
-router.get('/getAllCDs', function(req, res) {
-  CDSchema.find({}, (err, AllCDs) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    }
-    res.status(200).json(AllCDs);
-  });
-});
 
 
 

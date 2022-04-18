@@ -3,6 +3,15 @@ let CDArray = [];
 const storeIDArray = ['98053', '98007', '98077', '98055', '98011', '98046'];
 const cdIdArray = ['123456', '123654', '321456', '321654', '654123', '654321', '543216', '354126', '621453', '623451'];
 
+// define a constructor to create CD objects
+let orderObject = function (pStoreID, pSalesPersonID, pCdID, pPricePaid, pDate) {
+    this.StoreID = pStoreID
+    this.SalesPersonID = pSalesPersonID;
+    this.CdID = pCdID;
+    this.PricePaid = pPricePaid;  // action  comedy  drama  horrow scifi  musical  western
+    this.Date = pDate;
+}
+
 let timeElapsed;
 
 document.addEventListener("DOMContentLoaded", function () {
